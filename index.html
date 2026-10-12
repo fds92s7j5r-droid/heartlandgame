@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#111523">
+<title>HEARTLINE — Echoes of Tomorrow</title>
+<style>
+:root{color-scheme:dark;--ink:#e5e3f0;--muted:#a7a7be;--accent:#ebd39b;--border:#686681;--deep:#0b0c17}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at 50% 0,#28253a 0,#111320 52%,#090c13 100%);color:var(--ink);font-family:Verdana,Geneva,sans-serif}body{padding:18px 12px 26px;display:flex;align-items:center;flex-direction:column;gap:12px}
+.mast{width:min(960px,100%);display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-family:Georgia,serif;letter-spacing:2.1px;font-size:14px;font-weight:bold;color:#f4dca6}.brand small{font:10px monospace;letter-spacing:1px;color:#a8a5c6;display:block;margin-top:4px}.topactions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+button{font:700 12px Verdana,sans-serif;cursor:pointer;color:#f4f0fc;border:1px solid #79768f;background:linear-gradient(#3c3d58,#23243c);border-radius:5px;padding:10px 13px;touch-action:manipulation}button:hover,button:focus-visible{border-color:#efd89a;background:linear-gradient(#555675,#2b2e4c);outline:none}button:active{transform:translateY(1px)}button:disabled{opacity:.36;cursor:default}.tiny{padding:7px 10px;font-size:11px}.gold{background:linear-gradient(#917a4e,#5a4630);border-color:#d3b87b}.gold:hover{background:linear-gradient(#ae935a,#78623b)}
+.shell{width:min(960px,100%);position:relative;padding:4px;border-radius:9px;background:linear-gradient(130deg,#ccc59e,#595375 18%,#36334e 58%,#a69a78);box-shadow:0 13px 70px #0009,0 0 0 1px #b1a9aa4d}.stage{position:relative;background:#05070d;overflow:hidden;aspect-ratio:5/3;border-radius:4px}canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;touch-action:none}
+.over{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;background:linear-gradient(to bottom,#070b17ad 5%,#06071244 40%,#070811f2 100%);pointer-events:auto}.over[hidden]{display:none!important}
+.titleCard{border:1px solid #d4be8a85;background:linear-gradient(140deg,#121626e9,#1b1e37df);box-shadow:0 0 0 5px #0b0d14aa,0 0 45px #080b17dd;max-width:615px;width:100%;padding:24px 24px 19px}.eyebrow{font:700 11px monospace;letter-spacing:3.5px;color:#f7d896}.gametitle{font-family:Georgia,'Times New Roman',serif;font-size:clamp(36px,6.8vw,80px);letter-spacing:7px;color:#fff5c9;margin:5px 0 0;line-height:1.1;text-shadow:3px 4px #3b2c46,0 0 24px #c7a86b80}.subtitle{font-family:Georgia,serif;letter-spacing:5px;font-size:clamp(11px,1.85vw,20px);color:#d1bed8;margin:8px 0 17px}.tagline{line-height:1.65;font-family:Georgia,serif;font-style:italic;color:#c6c7db;font-size:15px;max-width:440px;margin:0 auto 16px}.startRow{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}.startRow button{min-width:150px}.nameRow{display:flex;justify-content:center;align-items:center;gap:9px;font-size:11px;color:#bbb6ca}.nameRow input{width:105px;max-width:40vw;padding:8px;color:#fff2cd;background:#101321;border:1px solid #736f8c;border-radius:4px;font-family:monospace;font-size:13px}.startFoot{font:11px monospace;color:#9da0b5;letter-spacing:.5px;margin:15px 0 0}
+.below{width:min(960px,100%);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.hint{font-size:11px;line-height:1.7;color:#afaec1}.hint kbd{display:inline-block;padding:2px 5px;border:1px solid #555770;border-radius:3px;color:#f5e9cd;font:11px monospace}
+.controls{display:none;align-items:center;justify-content:space-between;gap:20px;width:100%;max-width:620px;touch-action:none;user-select:none}.dpad{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,44px);gap:2px}.dpad .up{grid-column:2;grid-row:1}.dpad .left{grid-column:1;grid-row:2}.dpad .down{grid-column:2;grid-row:3}.dpad .right{grid-column:3;grid-row:2}.dpad button{font-size:20px;padding:0;border-radius:8px;background:#3a3b55;border:1px solid #88839e}.dpad .center{grid-column:2;grid-row:2;background:#232539;border:1px solid #39384a;cursor:default}.face{display:flex;gap:14px;align-items:center}.face button{border-radius:50%;width:63px;height:63px;font-size:13px;box-shadow:inset -3px -4px 0 #13142355}.face button:first-child{background:linear-gradient(#8b6b77,#674350)}.face button:last-child{background:linear-gradient(#8d7d56,#625037)}
+.note{max-width:960px;width:100%;font:11px/1.6 Verdana;color:#8f92a8;text-align:center}.note a{color:#ead29a}
+@media(max-width:900px),(pointer:coarse){body{padding:9px 7px 14px;gap:9px}.shell{padding:3px}.mast{padding:0 3px}.controls{display:flex}.below{justify-content:center}.hint{text-align:center}.topactions button{padding:7px 9px}.stage{aspect-ratio:5/3}.note{font-size:10px}.titleCard{padding:14px}.tagline{font-size:12px;margin-bottom:9px}.eyebrow{font-size:9px}.subtitle{margin:5px 0 9px}}
+@media(max-width:480px) and (orientation:portrait){.stage:has(#titleOverlay:not([hidden])){aspect-ratio:auto;height:365px}.stage:has(#titleOverlay:not([hidden])) canvas{position:absolute;inset:0;width:100%;height:100%}}
+@media(max-width:480px){.brand{font-size:12px}.brand small{font-size:8px}.topactions button{font-size:10px}.gametitle{font-size:36px;letter-spacing:3px}.subtitle{letter-spacing:2px}.titleCard{max-height:99%;padding:10px 12px;overflow:auto}.tagline{font-size:10px;line-height:1.3}.startRow{gap:5px}.startRow button{font-size:11px;min-width:105px;padding:9px}.startFoot{font-size:9px;margin-top:7px}.controls{gap:8px}.dpad{grid-template-columns:repeat(3,49px);grid-template-rows:repeat(3,42px)}.face{gap:8px}.face button{width:55px;height:55px}.hint{font-size:9px}}
+@media(orientation:landscape) and (max-height:530px){body{position:relative;padding:4px;gap:3px}.mast{display:flex;height:31px;width:min(96vw,960px)}.brand{font-size:12px}.brand small{display:none}.topactions button{padding:5px 7px;font-size:9px}.shell{width:min(72vw,calc((100dvh - 46px)*5/3));}.below,.note{display:none}.controls{position:absolute;top:36%;bottom:auto;width:auto;z-index:5;pointer-events:none;left:1%;right:1%;max-width:none;display:flex}.controls button{pointer-events:auto;opacity:.88}.dpad{grid-template-columns:repeat(3,29px);grid-template-rows:repeat(3,28px)}.dpad button{font-size:14px}.face{gap:6px}.face button{width:39px;height:39px;font-size:9px}.over{padding:6px}.titleCard{padding:9px}.tagline{font-size:11px;margin:6px auto}.gametitle{font-size:34px}.subtitle{font-size:10px;letter-spacing:2px;margin:3px}.startFoot{font-size:8px;margin-top:6px}.nameRow{font-size:9px}}
+
+</style>
+</head>
+<body>
+<header class="mast"><div class="brand">HEARTLINE <small>AN ORIGINAL 16-BIT-INSPIRED RPG</small></div><div class="topactions"><button class="tiny" id="journalButton" title="Open field journal">Journal</button><button class="tiny" id="saveButton" title="Save progress">Save</button><button class="tiny" id="soundButton" title="Toggle original synth soundtrack">♫ Sound: Off</button></div></header>
+<section class="shell"><div class="stage"><canvas id="game" width="960" height="576" aria-label="Playable retro role-playing game"></canvas><div class="over" id="titleOverlay"><div class="titleCard"><div class="eyebrow">A SONG FOR THE THINGS WE KEEP</div><div class="gametitle">HEARTLINE</div><div class="subtitle">ECHOES OF TOMORROW</div><p class="tagline">The world is losing its music. Its memories are next.<br>One engineer still knows how to listen.</p><label class="nameRow">Your character <input id="heroName" maxlength="13" autocomplete="off" value="J." aria-label="Character name"></label><div class="startRow"><button class="gold" id="newButton">Begin Adventure</button><button id="continueButton">Continue</button></div><div class="startFoot">ORIGINAL PIXEL ART · TURN-BASED BATTLES · MULTIPLE ENDINGS<br>CHAPTER ONE: THE SONG THAT REMAINS</div></div></div></div></section>
+<div class="below"><div class="hint"><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> Move &nbsp; <kbd>E</kbd> / <kbd>Space</kbd> Interact &nbsp; <kbd>J</kbd> Journal &nbsp; <kbd>1–6</kbd> Battle actions</div></div>
+<div class="controls" id="controls"><div class="dpad"><button class="up" data-dir="up" aria-label="Move up">▲</button><button class="left" data-dir="left" aria-label="Move left">◀</button><button class="center" disabled></button><button class="right" data-dir="right" aria-label="Move right">▶</button><button class="down" data-dir="down" aria-label="Move down">▼</button></div><div class="face"><button id="bButton" aria-label="Journal or back">MENU</button><button id="aButton" aria-label="Interact or confirm">A</button></div></div>
+<p class="note">A self-contained playable game. Saves on this device and browser. Sound starts only when enabled. For the largest view on a phone, rotate to landscape.</p>
+<script>
+(()=>{'use strict';
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
+const W=960,H=576,T=32,MX=24,MY=16,SX=768,FOOT=512,saveKey='heartline-v1-save';
+const $=id=>document.getElementById(id);const C={bg:'#0b1020',gold:'#e9ce93',white:'#f4edf0',dim:'#aaa8bf',teal:'#74e3d5',red:'#f09c9d',navy:'#151b32'};
+let mode='title',world={},s=null,dialog=null,battle=null,journal=false,toast='',toastUntil=0,keys={},moveClock=0,frame=0,titleStars=[],lastTime=0,menuSelection=0;
+let soundtrack=false,actx=null,nextBeat=0,musicBeat=0,lastTheme='',pendingAction=null;
+const rng=(x,y,n=0)=>{let v=Math.sin(x*127.1+y*311.7+n*73.9)*43758.5453;return v-Math.floor(v)};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const font=(size=15,weight='bold',family='monospace')=>`${weight} ${size}px ${family}`;
+const fill=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));};
+const line=(x,y,w,h,c)=>{fill(x,y,w,2,c);fill(x,y,2,h,c);fill(x+w-2,y,2,h,c);fill(x,y+h-2,w,2,c);};
+const text=(str,x,y,color=C.white,size=16,align='left',weight='bold',family='monospace')=>{ctx.textAlign=align;ctx.textBaseline='top';ctx.font=font(size,weight,family);ctx.fillStyle='#0008';ctx.fillText(String(str),x+1,y+2);ctx.fillStyle=color;ctx.fillText(String(str),x,y);ctx.textAlign='left';};
+const panel=(x,y,w,h)=>{fill(x,y,w,h,'#090b19ec');line(x,y,w,h,'#9b96b0');line(x+4,y+4,w-8,h-8,'#353451');};
+const wrap=(str,max)=>{const words=str.split(' '),lines=[];let line='';for(let word of words){let trial=line?line+' '+word:word;if(trial.length>max&&line){lines.push(line);line=word}else line=trial}if(line)lines.push(line);return lines};
+const maps={};
+function genMap(id){let a=Array.from({length:MY},(_,y)=>Array.from({length:MX},(_,x)=>'.'));
+ const tile=(x,y,c)=>{if(x>=0&&x<MX&&y>=0&&y<MY)a[y][x]=c};
+ const rect=(x,y,w,h,c)=>{for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)tile(xx,yy,c)};
+ const path=()=>{rect(0,7,MX,3,'p');for(let x=0;x<MX;x++){tile(x,6,'g');tile(x,10,'g')}};
+ if(id==='junction'){
+ rect(0,0,MX,MY,'g');for(let y=0;y<MY;y++)for(let x=0;x<MX;x++){if(rng(x,y,17)<.17)tile(x,y,'f')}
+ path();rect(3,2,7,4,'h');rect(12,2,5,4,'h');rect(19,2,4,4,'w');rect(2,12,20,2,'r');rect(8,10,2,2,'p');rect(11,5,1,2,'p');rect(7,6,4,1,'p');tile(5,11,'o');tile(17,5,'o');tile(21,6,'o');tile(17,10,'o');
+ }else if(id==='grove'){
+ rect(0,0,MX,MY,'g');for(let y=0;y<MY;y++)for(let x=0;x<MX;x++){let r=rng(x,y,22);if((y<6||y>10)&&r<.58)tile(x,y,'t');else if(r<.35)tile(x,y,'f')}
+ path();rect(10,2,5,4,'w');rect(15,4,6,3,'g');rect(18,7,4,3,'p');rect(2,2,3,3,'g');rect(5,4,3,5,'g');tile(5,4,'o');tile(4,11,'o');tile(22,8,'p');
+ }else if(id==='foundry'){
+ rect(0,0,MX,MY,'m');for(let x=0;x<MX;x++){tile(x,1,'b');tile(x,14,'b');if(x%3===0){tile(x,3,'v');tile(x,12,'v')}}rect(3,4,6,2,'b');rect(12,11,7,2,'b');rect(4,8,17,1,'p');rect(16,5,5,2,'p');rect(8,10,3,2,'m');tile(7,6,'o');tile(11,12,'o');tile(21,4,'o');
+ }else if(id==='heights'){
+ rect(0,0,MX,MY,'s');for(let y=0;y<MY;y++)for(let x=0;x<MX;x++){let r=rng(x,y,31);if((y<7||y>9)&&r<.28)tile(x,y,'c');else if(r<.12)tile(x,y,'f')}
+ path();rect(17,7,5,3,'p');rect(4,3,2,6,'s');tile(4,3,'o');tile(14,5,'o');tile(6,12,'o');
+ }else if(id==='spire'){
+ rect(0,0,MX,MY,'d');for(let x=0;x<MX;x++){tile(x,0,'b');tile(x,15,'b')}for(let y=1;y<15;y++){tile(0,y,'b');tile(23,y,'b')}rect(2,7,20,3,'p');for(let x of [5,10,15,20]){tile(x,3,'b');tile(x,12,'b')}rect(17,6,5,5,'p');tile(23,8,'p');tile(0,8,'p');
+ }
+ // Guaranteed unobstructed main thoroughfare and portals.
+ for(let x=1;x<23;x++)if(id!=='foundry'||x<5||x>7)tile(x,8,'p');
+ for(let y=7;y<=9;y++){tile(0,y,'p');tile(23,y,'p')}
+ return a};
+const data={
+ junction:{name:'LANTERN JUNCTION',mood:'Home is a direction',accent:'#7bc5a4',enemies:[],npc:[
+ {id:'mira',x:10,y:6,color:'mira',name:'Mira',talk:()=>{say('MIRA',[(s.flags.grove?'The Root Chord is back. Somewhere, people are humming again.':'I tuned your old four-string Resonator. That should keep the static off us.'),'Every beautiful thing leaves an echo. We just need to find the ones they stole.'])}},
+ {id:'edd',x:16,y:6,color:'elder',name:'Edda',talk:()=>say('EDDA',['SONANCE says forgetting pain is kindness. But the first thing they erased was the music people made to survive it.','The old signal network had three Heart Chords: ROOT, PULSE, and SKY. Return them, and the Spire can be challenged.'])},
+ {id:'vendor',x:12,y:10,color:'vendor',name:'Café Owner',talk:()=>{choose('CAFÉ OWNER',['I serve coffee cold, even in winter. Some traditions survive the end of the world.','A Resonance Tonic costs 12 Notes. What will it be?'],[{label:'One tonic · 12 Notes',fn:()=>{if(s.notes>=12){s.notes-=12;s.tonics++;notify('Tonic acquired!')}else notify('Not enough Notes.');save()}},{label:'Rest here · free',fn:()=>{s.hp=s.maxHp;s.sp=s.maxSp;notify('You feel ready to play again.');save()}},{label:'Just browsing',fn:()=>{}}])}},
+ {id:'clerk',x:3,y:10,color:'clerk',name:'Ticket Clerk',talk:()=>say('TICKET CLERK',['They took the memories, then required three forms to prove we ever had them.','I used to hate these shifts. Now I keep the lights on for the travelers who still come home.'])},
+ {id:'child',x:18,y:11,color:'child',name:'Little Listener',talk:()=>say('LITTLE LISTENER',['Can you make the train do its happy noise again?','When the rails sing, my feet dance all by themselves!'])}
+ ],objects:[{id:'ticket',x:5,y:11,kind:'memory',name:'Folded ticket',desc:'A ticket, years old. On the back: “Take the longer road if it gets everyone home.”'},{id:'bass',x:7,y:6,kind:'flavor',name:'Four-string bass',desc:'The wood is scratched from years of use. Four strings. A thousand unfinished songs.'},{id:'sign',x:21,y:10,kind:'flavor',name:'Station sign',desc:'EASTBOUND: MOSSLIGHT GROVE → IRONHOLLOW → STARGLASS HEIGHTS → THE SPIRE.'}]},
+ grove:{name:'MOSSLIGHT GROVE',mood:'Where the roots remember',accent:'#a7e397',enemies:['Static Moth','Bramble Shade'],boss:{id:'root',x:19,y:8,name:'THE HUSHWOLF',hp:105,atk:13,exp:46,notes:36},objects:[{id:'reel',x:5,y:4,kind:'memory',name:'Old tape reel',desc:'A rehearsal recording: rough timing, wrong notes, laughter. Nobody thought to edit the mistakes.'},{id:'shrine1',x:20,y:6,kind:'flavor',name:'Root altar',desc:'Roots hum beneath the stone. They have not forgotten the rhythm.'}]},
+ foundry:{name:'IRONHOLLOW WORKS',mood:'No soul can be itemized',accent:'#e6aa82',enemies:['Coilback','Paper Wraith'],boss:{id:'pulse',x:19,y:8,name:'THE AUDITOR',hp:145,atk:16,exp:68,notes:58},objects:[{id:'logbook',x:11,y:12,kind:'memory',name:'Discarded ledger',desc:'A worker listed thousands of unpaid hours. In the margin: “At least we built something that matters.”'},{id:'switch',x:7,y:6,kind:'flavor',name:'Rusting control panel',desc:'Every lever has a label except one. Someone scratched “HUMAN JUDGMENT” into the metal.'}]},
+ heights:{name:'STARGLASS HEIGHTS',mood:'The quiet between notes',accent:'#c1afff',enemies:['Mirror Wisp','Static Moth'],boss:{id:'sky',x:19,y:8,name:'THE GLASS SERAPH',hp:175,atk:19,exp:84,notes:80},objects:[{id:'starlight',x:4,y:3,kind:'memory',name:'Star-colored toy',desc:'A tiny toy covered in fingerprints. The kind a child returns to, again and again, delighted each time.'},{id:'cliff',x:14,y:5,kind:'flavor',name:'Sky lookout',desc:'Above the cloud sea, the world seems both impossibly fragile and worth protecting.'}]},
+ spire:{name:'THE QUIET SPIRE',mood:'The last movement',accent:'#e3afd6',enemies:[],boss:{id:'final',x:19,y:8,name:'DIRECTOR NULL',hp:260,atk:21,exp:150,notes:0},objects:[{id:'machine',x:15,y:6,kind:'flavor',name:'Heart Engine',desc:'A thousand stolen songs pulse in this machine. You can almost hear the spaces between them.'}]}
+};
+for(let id in data){maps[id]=genMap(id)}
+const transitions={junction:{east:'grove'},grove:{west:'junction',east:'foundry'},foundry:{west:'grove',east:'heights'},heights:{west:'foundry',east:'spire'},spire:{west:'heights'}};
+function fresh(name){return{hero:(name||'J.').trim().slice(0,13)||'J.',map:'junction',x:9,y:8,dir:'down',hp:100,maxHp:100,sp:28,maxSp:28,level:1,xp:0,notes:25,tonics:3,chords:{root:false,pulse:false,sky:false},flags:{},secrets:[],turns:0,wins:0,choice:null,ending:null,playtime:0,version:1}}
+function save(){if(!s)return;try{localStorage.setItem(saveKey,JSON.stringify(s));$('continueButton').disabled=false}catch(e){notify('Storage unavailable; progress not saved.') }}
+function load(){try{let v=JSON.parse(localStorage.getItem(saveKey)||'null');return v&&v.version===1?v:null}catch(e){return null}}
+function notify(str){toast=str;toastUntil=performance.now()+2900}
+function beginNew(){s=fresh($('heroName').value);$('titleOverlay').hidden=true;mode='world';journal=false;beginStory();save();updateAudio()}
+function continueGame(){const v=load();if(!v){notify('No saved adventure yet.');return}s=v;mode=s.ending?'ending':'world';journal=false;dialog=null;battle=null;$('titleOverlay').hidden=true;notify('Welcome back, '+s.hero+'.');updateAudio()}
+function beginStory(){say('PROLOGUE',['In the year of the Great Silence, a company called SONANCE learned how to capture human memories—and sell back only the comfortable ones.','The songs went first. Then the stories. Then the little things nobody knew they would miss.','You were an engineer before the silence, and a bassist before that. Machines and music both taught you to listen for what is missing.','Mira found a forgotten rail line connecting the three Heart Chords. Somewhere beyond them, the Heart Engine is still running.','The world does not need a perfect song. It needs its own song back.'],()=>{notify('Quest started: find the three Heart Chords.');save()})}
+function say(speaker,lines,onEnd){dialog={speaker,lines,index:0,onEnd:onEnd||null,choices:null,select:0};mode='dialog';journal=false}
+function choose(speaker,lines,choices){dialog={speaker,lines,index:0,onEnd:null,choices,select:0};mode='dialog';journal=false}
+function advance(){if(mode==='title'||mode==='ending')return;if(journal){journal=false;return}if(mode==='dialog'){
+ if(dialog.index<dialog.lines.length-1){dialog.index++;playSfx('tap');return}
+ if(dialog.choices){let ch=dialog.choices[dialog.select];dialog=null;mode='world';playSfx('confirm');if(ch&&ch.fn)ch.fn();return}
+ let fn=dialog.onEnd;dialog=null;mode='world';if(fn)fn();playSfx('tap');return}
+ if(mode==='battle'){battleConfirm();return}
+ if(mode==='world'){interact();return}}
+function canEnter(x,y){if(x<0||x>=MX||y<0||y>=MY)return false;const t=maps[s.map][y][x];return !['h','w','t','b','c','v'].includes(t)}
+function objective(){if(!s.chords.root)return 'Find the ROOT CHORD';if(!s.chords.pulse)return 'Reclaim the PULSE CHORD';if(!s.chords.sky)return 'Awaken the SKY CHORD';return 'Reach the Heart Engine'}
+function transition(dir){const target=transitions[s.map]?.[dir];if(!target)return;const required={foundry:'root',heights:'pulse',spire:'sky'}[target];if(required&&!s.chords[required]){say('SEALED SIGNAL',[`The line is blocked by a forgotten signal. Restore the ${required.toUpperCase()} CHORD first.`]);return}
+ s.map=target;s.x=dir==='east'?1:22;s.y=8;s.dir=dir;s.flags['visited_'+target]=true;mode='world';playSfx('transition');notify(data[target].name);save()}
+function move(dir){if(mode==='title'||mode==='ending')return;if(journal){if(dir==='up'||dir==='down'){}return}if(mode==='dialog'){if(dialog.choices&&dialog.index===dialog.lines.length-1){dialog.select=(dialog.select+(dir==='down'||dir==='right'?1:-1)+dialog.choices.length)%dialog.choices.length;playSfx('tap')}return}
+ if(mode==='battle'){const n=battle.actions.length;if(dir==='up'||dir==='left')battle.sel=(battle.sel-1+n)%n;else battle.sel=(battle.sel+1)%n;playSfx('tap');return}if(mode!=='world')return;
+ s.dir=dir;const dx={right:1,left:-1,up:0,down:0}[dir],dy={right:0,left:0,up:-1,down:1}[dir];const nx=s.x+dx,ny=s.y+dy;
+ if((dir==='right'&&nx>=23&&s.y>=7&&s.y<=9)){transition('east');return}
+ if((dir==='left'&&nx<=0&&s.y>=7&&s.y<=9)){transition('west');return}
+ if(!canEnter(nx,ny)){playSfx('bump');return}
+ const bs=data[s.map].boss;if(bs&&!s.flags[bs.id]&&bs.x===nx&&bs.y===ny){triggerBoss(bs);return}
+ const npc=(data[s.map].npc||[]).find(n=>n.x===nx&&n.y===ny);if(npc){npc.talk();return}
+ s.x=nx;s.y=ny;s.turns++;s.playtime++;if(s.turns%7===0)save();
+ if(data[s.map].enemies.length&&s.turns>5&&s.turns-(s.lastEncounterTurn||0)>6&&rng(s.turns,s.level,s.map.length)<.11){s.lastEncounterTurn=s.turns;const enemy=data[s.map].enemies[Math.floor(Math.random()*data[s.map].enemies.length)];beginBattle(enemy,false)}
+}
+function interact(){if(mode!=='world')return;const dx={right:1,left:-1,up:0,down:0}[s.dir],dy={right:0,left:0,up:-1,down:1}[s.dir];const tx=s.x+dx,ty=s.y+dy;
+ const npc=(data[s.map].npc||[]).find(n=>Math.abs(n.x-s.x)+Math.abs(n.y-s.y)<=1&&n.x===tx&&n.y===ty);if(npc){npc.talk();playSfx('confirm');return}
+ const boss=data[s.map].boss;if(boss&&!s.flags[boss.id]&&Math.abs(boss.x-s.x)+Math.abs(boss.y-s.y)<=1){triggerBoss(boss);return}
+ const o=(data[s.map].objects||[]).find(n=>Math.abs(n.x-s.x)+Math.abs(n.y-s.y)<=1&&n.x===tx&&n.y===ty);if(o){inspect(o);return}
+ // can interact with items directly underneath for forgiving controls
+ const near=(data[s.map].objects||[]).find(n=>Math.abs(n.x-s.x)+Math.abs(n.y-s.y)<=1);if(near){inspect(near);return}
+ notify('The world holds its breath. Listen closer.')}
+function inspect(o){playSfx('confirm');if(o.kind==='memory'&&!s.secrets.includes(o.id)){s.secrets.push(o.id);s.notes+=12;playSfx('chord');say('MEMORY FRAGMENT',[o.desc,'Memory held. +12 Notes.'],save)}else say(o.name.toUpperCase(),[o.desc,...(o.kind==='memory'?['You have already kept this memory.']:[])])}
+function triggerBoss(bs){if(bs.id==='root'){say('THE HUSHWOLF',['It emerges from the overgrown track bed: a creature made of silence and things unsaid.','Mira: “The first chord is trapped inside it. Give it something it cannot erase.”'],()=>beginBattle(bs.name,true,bs))}
+ else if(bs.id==='pulse'){say('THE AUDITOR',['“ALL UNDOCUMENTED FEELING WILL BE DEDUCTED.”','Mira: “That is the most terrifying paperwork I have ever seen.”'],()=>beginBattle(bs.name,true,bs))}
+ else if(bs.id==='sky'){say('GLASS SERAPH',['A voice comes through a thousand reflections: “Without loss, there can be no pain.”','Mira: “Without loss, how would we know what is precious?”'],()=>beginBattle(bs.name,true,bs))}
+ else {say('DIRECTOR NULL',['A person stands beside the Heart Engine, older and more tired than the propaganda posters.','“I did not steal joy,” Null says. “I tried to spare people grief. I remember what it cost me to feel.”','The Engine shudders. Your Resonator answers with a low, stubborn note.'],()=>beginBattle(bs.name,true,bs))}}
+const encounters={
+ 'Static Moth':{hp:34,atk:8,exp:19,notes:10,color:'#99bbdf',weak:'riff'},'Bramble Shade':{hp:42,atk:9,exp:22,notes:12,color:'#8dd9a0',weak:'riff'},
+ 'Coilback':{hp:52,atk:12,exp:30,notes:16,color:'#e6a16b',weak:'guard'},'Paper Wraith':{hp:47,atk:11,exp:28,notes:15,color:'#e2c89b',weak:'riff'},
+ 'Mirror Wisp':{hp:62,atk:14,exp:37,notes:19,color:'#baaceb',weak:'riff'}
+};
+function beginBattle(name,isBoss,bs){mode='battle';journal=false;const e=isBoss?{hp:bs.hp,atk:bs.atk,exp:bs.exp,notes:bs.notes,color:bs.id==='root'?'#96cbaa':bs.id==='pulse'?'#e7b180':bs.id==='sky'?'#baa9fb':'#e8a2b9',weak:'riff'}:encounters[name];
+ battle={name,boss:isBoss,bossId:bs?.id||null,max:e.hp,hp:e.hp,atk:e.atk,exp:e.exp,notes:e.notes,color:e.color,weak:e.weak,sel:0,actions:['STRIKE','BASS RIFF','MEND','GUARD','TONIC',...(isBoss?[]:['RETREAT'])],phase:'commands',logs:[`A ${name} blocks your way!`],guard:false,turn:0};playSfx('battle');updateAudio()}
+function battleLog(message){battle.logs.push(message);if(battle.logs.length>4)battle.logs.shift()}
+function dmg(n,kind){n=Math.max(1,Math.floor(n));battle.hp=Math.max(0,battle.hp-n);battleLog(`${kind} deals ${n} damage!`);playSfx('hit');if(battle.hp<=0){winBattle();return true}return false}
+function battleConfirm(){if(!battle||battle.phase!=='commands')return;const act=battle.actions[battle.sel];if(act==='STRIKE')dmg(12+s.level*4+Math.random()*7,'Strike');
+ else if(act==='BASS RIFF'){if(s.sp<7){battleLog('Not enough resonance (SP)!');playSfx('bump');return}s.sp-=7;dmg(25+s.level*7+Math.random()*9,'Bass Riff');playSfx('chord')}
+ else if(act==='MEND'){if(s.sp<8){battleLog('Not enough resonance (SP)!');playSfx('bump');return}s.sp-=8;let v=Math.min(s.maxHp-s.hp,34+s.level*5);s.hp+=v;battleLog(`Mira and ${s.hero} recover ${v} HP.`);playSfx('heal')}
+ else if(act==='GUARD'){battle.guard=true;s.sp=Math.min(s.maxSp,s.sp+5);battleLog('You brace for the next blow. +5 SP.')}
+ else if(act==='TONIC'){if(!s.tonics){battleLog('No Tonics left.');playSfx('bump');return}s.tonics--;let v=Math.min(s.maxHp-s.hp,65);s.hp+=v;battleLog(`A tonic restores ${v} HP.`);playSfx('heal')}
+ else if(act==='RETREAT'){if(Math.random()<.72){battle=null;mode='world';notify('You slipped back into the shadows.');updateAudio();return}else battleLog('You could not break away!')}
+ if(!battle)return;if(battle.hp<=0)return;
+ // Mira performs a short support turn on every player turn
+ if(s.hp<s.maxHp*.36&&battle.turn%3!==1){const v=Math.min(s.maxHp-s.hp,17+s.level*3);s.hp+=v;battleLog(`Mira patches you up. +${v} HP.`)}else {dmg(5+s.level*2+Math.random()*4,"Mira's overtone");if(!battle)return}
+ if(battle.hp<=0)return;
+ let hit=battle.atk+Math.random()*7-Math.min(s.level*1.4,7);if(battle.guard)hit*=.38;hit=Math.max(2,Math.floor(hit));s.hp=Math.max(0,s.hp-hit);battleLog(`${battle.name} attacks: -${hit} HP.`);battle.guard=false;battle.turn++;
+ if(battle.boss&&battle.hp<battle.max*.4&&battle.turn%3===1){let surge=Math.max(2,Math.floor(battle.atk*.36));s.hp=Math.max(0,s.hp-surge);battleLog('A wave of static rattles your heart! -'+surge+' HP.')}
+ if(s.hp<=0){battle.phase='defeat';setTimeout(()=>{if(battle&&battle.phase==='defeat'){s.hp=s.maxHp;s.sp=s.maxSp;s.map='junction';s.x=9;s.y=8;battle=null;mode='world';say('MIRA',['“Not your last performance,” Mira says, hauling you aboard the rescue locomotive.','“A song can begin again as many times as it needs.”'],()=>{save();notify('Restored at Lantern Junction.')});updateAudio()}},800)}
+ else{playSfx('enemy');save()}}
+function gainXp(xp){s.xp+=xp;let gain=[];while(s.xp>=s.level*40&&s.level<9){s.xp-=s.level*40;s.level++;s.maxHp+=20;s.maxSp+=6;s.hp=s.maxHp;s.sp=s.maxSp;gain.push(s.level)}return gain}
+function winBattle(){if(!battle)return;const b=battle;s.wins++;s.notes+=b.notes;const levels=gainXp(b.exp);battle=null;mode='world';playSfx('victory');updateAudio();
+ if(b.boss){s.flags[b.bossId]=true;if(b.bossId!=='final'){s.chords[b.bossId]=true;s.hp=s.maxHp;s.sp=s.maxSp;const nice={root:'ROOT',pulse:'PULSE',sky:'SKY'}[b.bossId];say('HEART CHORD RESTORED',[`You reclaimed the ${nice} CHORD. The entire line answers with a low, beautiful resonance.`,b.bossId==='root'?'Deep in the earth, forgotten melodies start to wake.':b.bossId==='pulse'?'The foundry clocks stop counting hours and begin keeping time.':'The stars above the city cease flickering and begin to shine.',`+${b.exp} XP   +${b.notes} Notes${levels.length?'   LEVEL '+s.level+'!':''}`],()=>{notify(objective());save()})}
+ else{save();finalDecision()} }
+ else {notify(`Victory! +${b.exp} XP · +${b.notes} Notes${levels.length?' · LEVEL '+s.level+'!':''}`);save()}}
+function finalDecision(){choose('DIRECTOR NULL',['The final note reverberates through the Spire. The Heart Engine opens, filled with the world’s lost memories.','Null: “You can erase the grief and keep the joy. Or return everything, even what hurts. I could not bear the choice.”','Mira looks at you. “The next movement is yours.”'],[
+ {label:'Restore every note — even the sad ones',fn:()=>finish('whole')},
+ {label:'Keep only the happy memories',fn:()=>finish('bright')}
+ ])}
+function finish(end){s.choice=end;s.ending=end;save();mode='ending';journal=false;playSfx('victory');updateAudio()}
+function drawTile(kind,x,y,mapId){const X=x*T,Y=y*T,r=rng(x,y,mapId.length),r2=rng(y,x,9);
+ const p=mapId==='junction'?['#376954','#40775e','#478167']:mapId==='grove'?['#315a49','#346b50','#3c7455']:['#353f56','#47536e','#515e75'];
+ if(kind==='g'||kind==='f'||kind==='t'||kind==='o'){fill(X,Y,32,32,p[Math.floor(r*3)]);fill(X+4+Math.floor(r*19),Y+6+Math.floor(r2*18),3,3,'#6ca77b');if(r>.56)fill(X+18,Y+20,2,4,'#254d40');if(kind==='t'){drawTree(X,Y)}if(kind==='f'){fill(X+10,Y+16,2,8,'#8ca75e');fill(X+7,Y+13,8,6,mapId==='heights'?'#c2afff':'#d8b5a4');fill(X+10,Y+14,2,3,'#efe0a3')}if(kind==='o'){fill(X+2,Y+2,28,28,'#ffffff12')}}
+ else if(kind==='p'){const light=mapId==='spire'?'#61526f':mapId==='heights'?'#615e8a':mapId==='foundry'?'#77767b':'#8d8579';fill(X,Y,32,32,light);fill(X,Y+28,32,4,'#0002');fill(X+((x%3)*5),Y+9,15,2,'#ffffff19');fill(X+((y%2)*11),Y+25,13,2,'#1b233735');if(r>.72)fill(X+27,Y+14,3,2,'#cac4b050')}
+ else if(kind==='h'){fill(X,Y,32,32,'#a3786a');for(let k=0;k<3;k++)fill(X,Y+k*11,32,2,'#593f4d');if((x+y)%3===0){fill(X+8,Y+5,14,17,'#45415b');fill(X+10,Y+7,10,12,'#debd78');fill(X+13,Y+9,4,5,'#f8e7ae')}if(y===2)fill(X,Y,32,8,'#56465e')}
+ else if(kind==='w'){fill(X,Y,32,32,'#265573');for(let j=0;j<3;j++){let ox=(Math.floor(rng(x,y,j)*26)+Math.floor(frame/14)*(j+1))%34;fill(X+ox,Y+4+j*10,8,2,'#559aac');fill(X+ox-5,Y+7+j*10,3,2,'#336e91')}}
+ else if(kind==='r'){fill(X,Y,32,32,'#41444b');for(let k=0;k<2;k++){fill(X,Y+1+k*18,32,7,'#675c52');fill(X,Y+3+k*18,32,2,'#967c65')}fill(X,Y+8,32,4,'#b9bdaf');fill(X,Y+26,32,4,'#b9bdaf');fill(X,Y+12,32,2,'#292e3d')}
+ else if(kind==='m'){fill(X,Y,32,32,r>.65?'#4f5861':'#58636d');line(X+1,Y+1,30,30,'#82868b50');fill(X+4,Y+4,3,3,'#bdad95');fill(X+25,Y+25,3,3,'#282d39');if(x%3===1){fill(X+11,Y+0,2,32,'#1c28344a')}}
+ else if(kind==='b'){fill(X,Y,32,32,mapId==='spire'?'#222338':'#424650');fill(X,Y,32,5,mapId==='spire'?'#645574':'#88756c');fill(X+5,Y+9,3,19,'#31323b');fill(X+23,Y+9,3,19,'#1c2431');fill(X+8,Y+15,16,2,'#92827b55')}
+ else if(kind==='v'){fill(X,Y,32,32,'#4f5661');fill(X+5,Y+7,22,23,'#272f3c');for(let j=0;j<4;j++)fill(X+9,Y+10+j*5,15,2,'#8b8378')}
+ else if(kind==='s'||kind==='c'){fill(X,Y,32,32,r>.5?'#514966':'#595071');fill(X+4,Y+6,8,2,'#a4a0d344');if(r>.8)fill(X+25,Y+21,3,3,'#b5a4da');if(kind==='c'){fill(X+9,Y+13,14,16,'#4e557f');fill(X+13,Y+5,10,21,'#aaa0e9');fill(X+17,Y+10,5,17,'#e2cbfa');fill(X+7,Y+19,7,9,'#8176c5')}}
+ else if(kind==='d'){fill(X,Y,32,32,'#252539');fill(X+2,Y+2,28,28,'#303045');fill(X+5,Y+5,22,22,'#383650');if((x+y)%3===0)fill(X+11,Y+11,9,9,'#6f556f55')}
+}
+function shadow(x,y,r=11){ctx.fillStyle='#06132177';ctx.beginPath();ctx.ellipse(x,y,r,4,0,0,Math.PI*2);ctx.fill()}
+function pixelHero(X,Y,type='hero',scale=2){const px=(x,y,w,h,col)=>fill(X+x*scale,Y+y*scale,w*scale,h*scale,col);
+ const palette={hero:{hair:'#29243b',cap:'#555c7c',skin:'#d0a68b',coat:'#5e739b',trim:'#b9c8d7',pants:'#363751',shoe:'#252b3b',glint:'#e3c6a1'},mira:{hair:'#653f4c',cap:'#d78e7f',skin:'#ebc1a1',coat:'#488e8b',trim:'#d0dfac',pants:'#345764',shoe:'#283a50',glint:'#e7d8a0'},elder:{hair:'#c5c2c6',cap:'#98909f',skin:'#d9aa8c',coat:'#665779',trim:'#cdb4ac',pants:'#565270',shoe:'#26293b',glint:'#f6d9a8'},vendor:{hair:'#42313d',cap:'#917355',skin:'#d6ae93',coat:'#a07758',trim:'#ebc586',pants:'#58454e',shoe:'#2d2c36',glint:'#ffe0b4'},clerk:{hair:'#575060',cap:'#5c6178',skin:'#cda992',coat:'#6c7c88',trim:'#e1c299',pants:'#33394e',shoe:'#171b2b',glint:'#ffffff'},child:{hair:'#503b45',cap:'#ba8ca4',skin:'#e9bb9b',coat:'#dfb263',trim:'#f2dfb6',pants:'#69657a',shoe:'#2e2c43',glint:'#fff0cc'}}[type]||{};
+ shadow(X+16*scale/2,Y+15*scale,scale*5.3);
+ px(5,1,6,2,palette.hair);px(4,3,8,3,palette.cap);px(5,4,6,4,palette.skin);px(4,4,2,2,palette.hair);px(10,4,2,2,palette.hair);px(6,5,1,1,palette.hair);px(9,5,1,1,palette.hair);px(6,8,5,1,palette.glint);px(4,9,8,4,palette.coat);px(6,9,3,2,palette.trim);px(2,10,2,4,palette.coat);px(12,10,2,4,palette.coat);px(5,13,3,2,palette.pants);px(9,13,3,2,palette.pants);px(4,15,4,1,palette.shoe);px(9,15,4,1,palette.shoe);px(3,12,1,2,palette.skin);px(12,12,1,2,palette.skin);
+ if(type==='hero'){px(4,1,9,2,'#373b58');px(11,4,2,2,'#6f809c');px(3,9,2,4,'#425e81')}if(type==='mira'){px(3,3,2,8,'#a55f64');px(12,5,2,7,'#a55f64');px(5,8,7,2,'#e3c288')}if(type==='child'){px(4,10,9,4,'#d9a863')}
+}
+function drawTree(X,Y){shadow(X+17,Y+30,15);fill(X+12,Y+20,9,12,'#57473f');fill(X+4,Y+8,25,19,'#224b42');fill(X+0,Y+11,12,14,'#2b5c4b');fill(X+8,Y+1,18,16,'#47765b');fill(X+5,Y+6,20,11,'#3c7758');fill(X+13,Y+4,8,5,'#6a9470');fill(X+22,Y+15,7,5,'#588767')}
+function drawObjects(){let arr=data[s.map].objects||[];for(let o of arr){const X=o.x*32,Y=o.y*32+(Math.sin(frame/17+o.x)*2);if(o.kind==='memory'&&s.secrets.includes(o.id))continue;shadow(X+16,Y+29,9);if(o.kind==='memory'){fill(X+10,Y+11,13,15,'#2d293d');line(X+9,Y+10,15,17,C.gold);fill(X+12,Y+13,9,9,'#f9d8a0');fill(X+15,Y+15,3,3,'#805878');fill(X+15,Y-1+(Math.floor(frame/16)%3)*2,3,3,'#fff0b9')}else{fill(X+9,Y+14,15,13,'#55526b');fill(X+7,Y+12,19,4,'#aca37f');fill(X+14,Y+7,5,6,C.gold)} }
+}
+function drawBoss(bs){const X=bs.x*T,Y=bs.y*T;const t=frame/18;ctx.fillStyle=bs.id==='final'?'#d799b655':'#f5e6bd35';ctx.beginPath();ctx.ellipse(X+16,Y+19,38+Math.sin(t)*4,40+Math.cos(t)*4,0,0,7);ctx.fill();shadow(X+16,Y+32,27);let colors={root:['#2c5146','#94c99a','#c5e7bc'],pulse:['#594c51','#d3a577','#e7c89b'],sky:['#5f5686','#afa1da','#e0d0fa'],final:['#48364f','#d58cae','#ffe1e4']}[bs.id];
+ const px=(x,y,w,h,c)=>fill(X+x*3.1-22,Y+y*3.1-31,w*3.1,h*3.1,c);
+ if(bs.id==='root'){px(3,4,14,13,colors[0]);px(6,2,5,6,colors[1]);px(2,0,4,7,colors[1]);px(14,0,4,7,colors[1]);px(4,8,12,6,colors[1]);px(6,9,3,2,'#fbeab5');px(13,9,3,2,'#fbeab5');px(8,13,4,2,colors[2]);px(0,12,3,7,colors[0]);px(17,12,3,7,colors[0])}
+ else if(bs.id==='pulse'){px(4,1,12,18,colors[0]);px(2,3,16,5,colors[1]);px(7,4,6,4,colors[2]);px(4,10,12,6,colors[1]);px(6,12,9,2,'#5a2b36');px(0,7,4,10,colors[0]);px(16,7,4,10,colors[0]);px(8,0,4,3,C.gold)}
+ else if(bs.id==='sky'){px(7,0,7,18,colors[0]);px(3,4,15,9,colors[1]);px(2,1,3,11,colors[2]);px(15,1,4,11,colors[2]);px(7,5,3,3,'#ffffff');px(13,5,3,3,'#ffffff');px(8,13,5,6,colors[2]);px(4,14,5,4,'#8479bc')}
+ else{px(7,0,7,5,colors[2]);px(5,4,12,12,colors[0]);px(7,6,7,6,colors[1]);px(1,8,5,12,colors[1]);px(16,8,5,12,colors[1]);px(5,15,4,5,colors[0]);px(13,15,4,5,colors[0]);px(8,8,5,2,'#f9e0c7')}
+}
+function drawWorld(){const map=maps[s.map];for(let y=0;y<MY;y++)for(let x=0;x<MX;x++){const kind=map[y][x];drawTile(kind,x,y,s.map)}
+ if(s.map==='junction'){// station marquee and railcar
+ fill(103,60,221,11,'#463b50');fill(108,66,211,2,'#d4bd87');text('SIGNAL HOUSE',126,70,'#e5d3a3',10);fill(75,423,167,11,'#394f63');fill(85,432,160,6,'#c2ac8c');for(let x=84;x<220;x+=24){fill(x,445,8,13,'#303443');fill(x+3,445,3,5,'#ead9af')}fill(111,419,11,7,'#f0d8a4')}
+ else if(s.map==='grove'){for(let j=0;j<8;j++){let x=(j*111+10)%700,y=100+(j*43)%295;fill(x,y+(Math.sin(frame/20+j)*3),3,3,'#d1edb18c')}}
+ else if(s.map==='foundry'){for(let x of [49,251,490,681]){fill(x,0,11,512,'#2d323b35');fill(x+5,0,3,512,'#8791a121')}for(let x=0;x<700;x+=120){fill(x+((frame*.4)%80),90,15,2,'#c5947860')}}
+ else if(s.map==='heights'){for(let j=0;j<25;j++){let x=(j*107)%750,y=(j*53)%500;fill(x,y,3+(j%2),3+(j%2),j%3===0?'#eac9eb':'#b7aef1')}}
+ else if(s.map==='spire'){for(let x=0;x<750;x+=70){fill(x+3,0,18,512,'#12122536')}for(let j=0;j<6;j++){fill(280+j*34,80+(frame+j*5)%360,3,3,'#d9a3c775')}}
+ // exits & direction indicators
+ if(s.map!=='spire'){fill(748,226,12,55,'#f3ce7270');text('›',742,232,'#fff1bc',29)}if(s.map!=='junction'){fill(7,226,12,55,'#e9ca7280');text('‹',8,232,'#fff1bc',29)}
+ // objects and characters sorted in y-coordinate to improve overlap
+ const actors=[];for(let o of (data[s.map].objects||[]))actors.push({y:o.y,kind:'object',value:o});for(let n of (data[s.map].npc||[]))actors.push({y:n.y,kind:'npc',value:n});const boss=data[s.map].boss;if(boss&&!s.flags[boss.id])actors.push({y:boss.y,kind:'boss',value:boss});
+ if(s.map!=='junction'){actors.push({y:s.prevY??s.y,x:s.prevX??s.x,kind:'mira'})}
+ actors.push({y:s.y,kind:'player'});actors.sort((a,b)=>a.y-b.y);
+ for(let a of actors){const v=a.value;if(a.kind==='object'){if(v.kind==='memory'&&s.secrets.includes(v.id))continue;let x=v.x*T,y=v.y*T;shadow(x+16,y+29,8);if(v.kind==='memory'){fill(x+9,y+12+Math.sin(frame/13)*2,15,13,'#dabd8a');fill(x+12,y+15,9,6,'#8a647c');fill(x+14,y+5+Math.sin(frame/13)*2,4,4,'#fff1c0')}else{fill(x+10,y+13,13,16,'#51495f');fill(x+12,y+8,9,6,'#e3c08a')}}
+ if(a.kind==='npc'){pixelHero(v.x*T,v.y*T,v.color);if(Math.abs(v.x-s.x)+Math.abs(v.y-s.y)<=2)text('!',v.x*T+11,v.y*T-16,C.gold,18)}
+ if(a.kind==='boss'){drawBoss(v);if(Math.abs(v.x-s.x)+Math.abs(v.y-s.y)<=4)text('!',v.x*T+5,v.y*T-47,C.red,24)}
+ if(a.kind==='mira'){if(a.x>=0&&a.y>=0&&a.x<MX&&a.y<MY)pixelHero(a.x*T,a.y*T,'mira')}
+ if(a.kind==='player'){pixelHero(s.x*T,s.y*T,'hero');if(s.dir==='left')fill(s.x*T+4,s.y*T+19,3,2,C.gold);if(s.dir==='right')fill(s.x*T+25,s.y*T+19,3,2,C.gold)}
+ }
+ // Nightlight overlay via tiny static particle effect
+ for(let j=0;j<7;j++){let x=(j*137+55)%766,y=(j*73+frame*.14*(j%2?1:-1)+800)%505;fill(x,y,2,2,'#ffe5ac38')}
+ drawSidebar();drawFooter()}
+function bar(x,y,w,h,v,max,col){fill(x,y,w,h,'#101222');fill(x+2,y+2,Math.max(0,(w-4)*v/max),h-4,col);line(x,y,w,h,'#82809e')}
+function drawSidebar(){fill(SX,0,192,512,'#141729');fill(SX,0,4,512,'#817592');fill(SX+11,14,168,2,C.gold);text('HEARTLINE',SX+17,25,C.gold,18);text('ECHOES OF TOMORROW',SX+17,49,C.dim,9);fill(SX+11,78,168,1,'#6d6b84');
+ text('THE ENGINEER',SX+17,92,C.dim,11);text(s.hero.toUpperCase(),SX+17,113,C.white,20);text('LEVEL '+s.level,SX+17,142,C.gold,12);
+ text('HP',SX+17,178,'#ecc1b5',13);text(s.hp+' / '+s.maxHp,SX+170,178,C.white,11,'right');bar(SX+17,196,155,12,s.hp,s.maxHp,'#c07179');text('SP',SX+17,218,C.teal,13);text(s.sp+' / '+s.maxSp,SX+170,218,C.white,11,'right');bar(SX+17,237,155,12,s.sp,s.maxSp,'#64adb1');
+ fill(SX+11,266,168,1,'#6d6b84');text('NOTES',SX+17,280,C.dim,12);text('◈ '+s.notes,SX+172,278,C.gold,16,'right');text('TONICS',SX+17,307,C.dim,12);text('× '+s.tonics,SX+172,306,C.white,14,'right');
+ fill(SX+11,336,168,1,'#6d6b84');text('HEART CHORDS',SX+17,351,C.dim,12);let names=[['root','ROOT'],['pulse','PULSE'],['sky','SKY']];names.forEach(([id,label],i)=>{let y=374+i*24;fill(SX+17,y,11,11,s.chords[id]?'#c7e3b0':'#46475d');line(SX+17,y,11,11,s.chords[id]?C.gold:'#66687c');text(label,SX+38,y-1,s.chords[id]?C.gold:'#77798c',12)});
+ fill(SX+11,458,168,1,'#6d6b84');text('FIELD JOURNAL [J]',SX+17,473,C.dim,11)}
+function drawFooter(){fill(0,512,960,64,'#090d1c');fill(0,512,960,2,'#a09a94');text(data[s.map].name,20,527,data[s.map].accent,17);text(objective(),20,551,C.dim,11);let obj=(data[s.map].objects||[]).find(n=>Math.abs(n.x-s.x)+Math.abs(n.y-s.y)<=1);const boss=data[s.map].boss;let nearBoss=boss&&!s.flags[boss.id]&&Math.abs(boss.x-s.x)+Math.abs(boss.y-s.y)<=1;let nearNPC=(data[s.map].npc||[]).find(n=>Math.abs(n.x-s.x)+Math.abs(n.y-s.y)<=1);if(nearBoss||nearNPC||obj)text('E  INSPECT / TALK',935,532,C.gold,12,'right');else text('ARROWS / WASD  MOVE',935,532,C.dim,12,'right');text('SAVE · JOURNAL · LISTEN',935,552,C.dim,10,'right')}
+function drawDialogue(){panel(20,337,920,217);fill(47,344,235,28,'#484260');text(dialog.speaker,59,350,C.gold,17);
+ const l=wrap(dialog.lines[dialog.index],82);l.slice(0,4).forEach((part,i)=>text(part,54,389+i*27,C.white,17));
+ if(dialog.choices&&dialog.index===dialog.lines.length-1){const choices=dialog.choices;fill(35,435,890,99,'#070c19');choices.forEach((c,i)=>{const yy=443+i*33;fill(48,yy,870,30,i===dialog.select?'#76688a':'#23263e');text((i===dialog.select?'▶ ':'  ')+c.label,65,yy+6,i===dialog.select?C.gold:C.white,15)})}
+ else{text('▼  '+(dialog.index<dialog.lines.length-1?'CONTINUE':'CLOSE'),904,528,C.gold,12,'right')}
+}
+function drawJournal(){panel(42,33,876,493);text('FIELD JOURNAL',75,57,C.gold,28);fill(75,95,811,2,'#6d6980');text('CURRENT OBJECTIVE',75,114,C.dim,13);text(objective(),75,137,C.white,20);
+ text('RECOVERED CHORDS',75,182,C.dim,13);[['root','Root — The courage to begin'],['pulse','Pulse — The work that connects us'],['sky','Sky — The wonder we refuse to lose']].forEach(([k,v],i)=>text((s.chords[k]?'◆':'◇')+' '+v,85,207+i*29,s.chords[k]?C.gold:'#858398',15));
+ text('KEPT MEMORIES',75,315,C.dim,13);text(s.secrets.length+' / 4 fragments',75,340,C.teal,17);text('A better ending may hide in the ordinary things.',75,371,C.dim,14);
+ text('BATTLE',550,116,C.dim,13);text('STRIKE · free attack',550,143,C.white,14);text('BASS RIFF · 7 SP, heavy damage',550,169,C.white,14);text('MEND · 8 SP, heal',550,195,C.white,14);text('GUARD · half damage, +5 SP',550,221,C.white,14);text('TONIC · restore 65 HP',550,247,C.white,14);
+ fill(75,420,810,2,'#6d6980');text('Press J, MENU, A, SPACE, or ESC to return',75,446,C.gold,16);text('Your progress can be saved at any point from the top bar.',75,474,C.dim,12)}
+function battleBackdrop(){let hue=s.map==='grove'?'#1e403e':s.map==='foundry'?'#4b3936':s.map==='heights'?'#39354d':'#38283c';fill(0,0,960,576,'#12182c');for(let y=0;y<350;y+=6){let c=(y%18===0)?'#ffffff06':'#00000010';fill(0,y,960,6,c)}fill(0,205,960,160,hue);for(let j=0;j<8;j++){let x=j*148-33,h=45+(j*17)%79;fill(x,205-h,115,h,'#11192983');fill(x+10,205-h+14,12,h-20,'#6663841e')}fill(0,324,960,252,'#1d2434');for(let j=0;j<20;j++){let x=j*61,y=340+(j*67)%205;fill(x,y,39,3,'#79829620')}fill(0,0,960,7,C.gold)}
+function drawBattle(){battleBackdrop();text(battle.boss?'BOSS ENCOUNTER':'WILD ENCOUNTER',40,24,battle.boss?C.red:C.dim,13);text(battle.name,43,48,C.gold,23);
+ bar(44,82,350,18,battle.hp,battle.max,battle.color);text(battle.hp+' / '+battle.max+' HP',404,83,C.white,13,'right');
+ // Pixel-art landscape actors
+ shadow(170,316,74);pixelHero(125,218,'hero',5);shadow(380,329,63);pixelHero(335,231,'mira',4.8);
+ const bx=660,by=172;ctx.fillStyle='#b0a1d128';ctx.beginPath();ctx.ellipse(bx+86,by+95,85+Math.sin(frame/11)*9,109,0,0,7);ctx.fill();shadow(bx+89,342,90);
+ const pr=(x,y,w,h,color)=>fill(bx+x*7,by+y*7,w*7,h*7,color);const e=battle.color;
+ if(battle.boss){pr(7,0,11,5,e);pr(4,4,17,9,'#473b59');pr(6,5,13,6,e);pr(3,9,19,6,'#75627d');pr(8,6,3,2,'#f7e8bd');pr(16,6,3,2,'#f7e8bd');pr(6,15,5,7,'#4b435f');pr(14,15,5,7,'#4b435f');pr(0,9,5,12,e);pr(20,9,5,12,e)}
+ else{pr(6,2,10,12,e);pr(3,7,16,10,'#3b4a62');pr(1,4,6,11,e);pr(17,4,6,11,e);pr(7,5,3,3,'#fff2c2');pr(15,5,3,3,'#fff2c2');pr(9,13,6,2,e);pr(5,17,4,4,'#343b54');pr(15,17,4,4,'#343b54')}
+ panel(21,364,561,189);panel(596,364,343,189);
+ const actions=battle.actions;actions.forEach((act,i)=>{const row=i%3,col=Math.floor(i/3);const x=39+col*267,y=395+row*46;const selected=i===battle.sel;fill(x,y,252,37,selected?'#655871':'#292c43');line(x,y,252,37,selected?C.gold:'#50506b');text((selected?'▶ ':'  ')+(i+1)+'. '+act,x+8,y+10,selected?C.gold:C.white,15) });
+ text('BATTLE LOG',610,378,C.gold,13);battle.logs.slice(-4).forEach((l,i)=>wrap(l,39).slice(0,2).forEach((part,j)=>text(part,612,405+i*33+j*16,i===battle.logs.length-1?C.white:C.dim,12)));
+ fill(0,554,960,22,'#0b0c17');text(`${s.hero}  HP ${s.hp}/${s.maxHp}   SP ${s.sp}/${s.maxSp}   ·   MIRA SUPPORTS YOUR TURN`,25,558,C.gold,12);
+ if(battle.phase==='defeat'){panel(190,205,575,130);text('THE SONG IS NOT OVER',480,226,C.red,23,'center');text('Mira is getting you back to safety…',480,275,C.dim,15,'center')}
+}
+function drawTitle(){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#141830');g.addColorStop(.5,'#3c3b58');g.addColorStop(1,'#4d4a59');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ for(let i=0;i<76;i++){let x=Math.floor(rng(i,0,23)*W),y=Math.floor(rng(i,1,24)*H*.6);fill(x,y,2+(i%3===0?2:0),2,'#eee2cf99')}
+ fill(674,94,90,90,'#ead8ae');fill(685,106,68,69,'#fff0c7');
+ for(let k=0;k<3;k++){let y=297+k*61;let c=['#5f5b77','#494961','#2a334c'][k];ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(0,H);for(let x=0;x<W+10;x+=16){let z=y-55*rng(Math.floor(x/80),k,4)-Math.sin(x*.014+k)*26;ctx.lineTo(x,Math.round(z/8)*8)}ctx.lineTo(W,H);ctx.closePath();ctx.fill()}
+ for(let x=0;x<960;x+=48){let h=30+(x*17%91);fill(x,385-h,24,h,'#273743');fill(x+7,395-h,4,14,'#647180')}
+ fill(0,451,960,125,'#25293e');for(let y of [475,523]){fill(0,y,960,5,'#b5a18b');for(let x=0;x<960;x+=42)fill(x,y-6,22,18,'#6d5958')}
+ // The train, drawn entirely from colored pixel blocks
+ fill(100,368,403,76,'#425c70');fill(115,379,367,14,'#7891a0');fill(110,423,380,8,'#a9acac');fill(410,352,49,17,'#677d8a');fill(421,328,25,25,'#586c80');for(let i=0;i<7;i++){fill(132+i*49,386,33,25,'#c2c9a9');fill(136+i*49,389,26,18,'#eacb8b');fill(127+i*49,414,37,3,'#253545')}for(let i=0;i<6;i++){fill(135+i*60,438,36,17,'#171d2b');fill(144+i*60,443,19,9,'#88909a')}
+ for(let i=0;i<11;i++){let p=(frame*.2+i*13)%135;fill(424+i*3-p*.5,300-p,30+p*.22,13+p*.11,'#ddd4df21')}
+}
+function drawEnding(){drawTitle();fill(0,0,960,576,'#070b18cf');panel(77,48,804,472);text('THE LAST MEASURE',480,77,C.gold,30,'center');let paras=[];
+ if(s.ending==='whole')paras=['You open the Heart Engine and release every memory. The good ones, the painful ones, and the ones with no easy name.','For a moment, the whole world is unbearably loud. Then the noise becomes music.','People remember everything they lost. They remember, too, why it was worth loving. The next train is late. Nobody minds.','Mira laughs through her tears. “I think we found the key.”'];
+ else paras=['You return the bright memories and quietly let the painful ones go. A golden, gentle music fills the stations.','There are no sad songs. No arguments. No tears at old photographs. The world looks beautiful from a distance.','Yet now and then, you reach for a note that should be there and find only silence.','Mira asks, very softly, “Do you think a song can be whole without its minor chords?”'];
+ paras.forEach((t,i)=>wrap(t,85).forEach((ln,j)=>text(ln,112,136+i*65+j*22,C.white,15)));
+ if(s.secrets.length>=3){fill(105,398,750,2,C.gold);text('HIDDEN CODA',117,409,C.gold,12);wrap('A child runs along the platform carrying a little toy, humming a melody no one remembers teaching them. You smile. It was never about getting there first.',86).slice(0,3).forEach((t,i)=>text(t,117,427+i*20,'#e4d4c1',13))}
+ text(`THE END  ·  ${s.wins} BATTLES WON  ·  ${s.secrets.length}/4 MEMORIES KEPT`,480,486,C.dim,12,'center');fill(358,528,245,32,'#6b5974');line(358,528,245,32,C.gold);text('PLAY AGAIN  ↵',480,535,C.white,17,'center')}
+function render(now){frame++;if(mode==='title')drawTitle();else if(mode==='battle')drawBattle();else if(mode==='ending')drawEnding();else{drawWorld();if(mode==='dialog'&&dialog)drawDialogue();if(journal)drawJournal()}
+ if(toast&&now<toastUntil&&mode!=='title'&&mode!=='ending'&&!journal&&mode!=='dialog'){const w=Math.min(790,Math.max(270,toast.length*9+46));fill((W-w)/2,15,w,34,'#1b203de8');line((W-w)/2,15,w,34,'#e6d296');text(toast,W/2,23,C.gold,13,'center')}
+ if(mode!=='title'&&mode!=='ending'&&!journal&&mode!=='dialog'&&mode!=='battle'){let dir=Object.entries(keys).find(([k,v])=>v&&['up','down','left','right'].includes(k))?.[0];if(dir&&now-moveClock>142){moveClock=now;move(dir)}}
+ musicTick();requestAnimationFrame(render)}
+// Entirely generated, original two-channel chiptune-style score. No external audio or files.
+const song={
+ junction:{speed:.28,mel:[62,65,69,72,69,65,64,0,62,65,69,74,72,69,65,0],bass:[38,0,0,0,41,0,0,0,43,0,0,0,41,0,0,0]},
+ grove:{speed:.30,mel:[62,65,67,69,0,67,65,0,60,62,65,69,67,65,62,0],bass:[38,0,0,0,36,0,0,0,34,0,0,0,36,0,0,0]},
+ foundry:{speed:.215,mel:[50,53,57,0,55,57,60,0,50,55,58,57,53,50,0,0],bass:[38,38,0,36,38,0,41,0,34,34,0,36,38,0,36,0]},
+ heights:{speed:.32,mel:[69,72,76,74,72,0,69,67,65,69,72,79,76,74,72,0],bass:[41,0,0,0,38,0,0,0,36,0,0,0,34,0,0,0]},
+ spire:{speed:.255,mel:[62,0,61,65,69,0,68,65,62,65,70,69,65,61,62,0],bass:[38,0,37,0,34,0,33,0,38,0,36,0,33,0,38,0]},
+ battle:{speed:.17,mel:[62,65,69,0,74,72,69,65,62,62,65,69,77,74,72,0],bass:[38,38,0,38,36,36,0,36,34,34,0,34,36,36,38,0]},
+ ending:{speed:.31,mel:[62,65,69,72,74,72,69,65,67,69,74,77,76,74,72,0],bass:[38,0,0,0,41,0,0,0,43,0,0,0,38,0,0,0]}
+};
+function curTheme(){return mode==='battle'?'battle':mode==='ending'?'ending':s?.map||'junction'}
+function setupAudio(){try{if(!actx){actx=new (window.AudioContext||window.webkitAudioContext)()}if(actx.state==='suspended')actx.resume();return true}catch(e){notify('Audio is not supported here.');return false}}
+function oscillator(note,duration=.18,type='triangle',vol=.034,at){if(!actx||!soundtrack)return;at=at||actx.currentTime;const osc=actx.createOscillator(),gain=actx.createGain();osc.type=type;osc.frequency.value=440*Math.pow(2,(note-69)/12);gain.gain.setValueAtTime(0.0001,at);gain.gain.exponentialRampToValueAtTime(vol,at+.018);gain.gain.exponentialRampToValueAtTime(.0001,at+duration);osc.connect(gain).connect(actx.destination);osc.start(at);osc.stop(at+duration+.04)}
+function musicTick(){if(!soundtrack||!actx||actx.state!=='running')return;const theme=curTheme();if(theme!==lastTheme){lastTheme=theme;musicBeat=0;nextBeat=actx.currentTime+.03}const tune=song[theme]||song.junction;let it=0;while(nextBeat<actx.currentTime+.13&&it++<3){let k=musicBeat%16;if(tune.mel[k])oscillator(tune.mel[k],tune.speed*.78,'triangle',.023,nextBeat);if(tune.bass[k])oscillator(tune.bass[k],tune.speed*1.35,'sine',.052,nextBeat);if(k%4===2)oscillator((tune.bass[k-k%4]||38)+12,tune.speed*1.1,'triangle',.012,nextBeat);musicBeat++;nextBeat+=tune.speed}}
+function updateAudio(){lastTheme='';nextBeat=actx?.currentTime||0;$('soundButton').textContent='♫ Sound: '+(soundtrack?'On':'Off')}
+function playSfx(name){if(!soundtrack||!actx)return;const note={tap:[74],confirm:[65,72],bump:[43],battle:[50,53,56],enemy:[47],hit:[50,46],heal:[69,74,77],chord:[62,65,69,74],victory:[65,69,72,77],transition:[62,69,74]}[name]||[62];note.forEach((v,i)=>oscillator(v,.11+(i*.03),'square',.014,actx.currentTime+i*.063))}
+const keymap={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',W:'up',s:'down',S:'down',a:'left',A:'left',d:'right',D:'right'};
+function press(dir){if(mode==='title')return;keys[dir]=true;moveClock=performance.now();move(dir)}
+function release(dir){delete keys[dir]}
+document.addEventListener('keydown',e=>{if(document.activeElement?.tagName==='INPUT')return;
+ if(keymap[e.key]){e.preventDefault();if(!e.repeat)press(keymap[e.key]);return}
+ if([' ','Enter','e','E'].includes(e.key)){e.preventDefault();if(mode==='ending'){mode='title';$('titleOverlay').hidden=false;lastTheme='';return}advance();return}
+ if(['Escape','j','J'].includes(e.key)){e.preventDefault();if(mode==='dialog'){if(dialog.choices&&dialog.index===dialog.lines.length-1)advance();else advance()}else if(mode==='world')journal=!journal;else if(journal)journal=false;return}
+ if(mode==='battle'&&/^[1-6]$/.test(e.key)){let n=Number(e.key)-1;if(n<battle.actions.length){battle.sel=n;battleConfirm()}return}
+ if(mode==='dialog'&&dialog.choices&&/^[1-9]$/.test(e.key)){let n=Number(e.key)-1;if(n<dialog.choices.length){dialog.select=n;advance()}return}
+});
+document.addEventListener('keyup',e=>{if(keymap[e.key])release(keymap[e.key])});window.addEventListener('blur',()=>{keys={}});
+function handleStageTap(e){if(mode==='title')return;let rect=canvas.getBoundingClientRect();let x=(e.clientX-rect.left)*W/rect.width,y=(e.clientY-rect.top)*H/rect.height;
+ if(mode==='ending'){if(y>496){mode='title';$('titleOverlay').hidden=false;updateAudio()}return}
+ if(journal){journal=false;return}
+ if(mode==='dialog'){if(dialog.choices&&dialog.index===dialog.lines.length-1&&y>=430){let i=Math.floor((y-443)/33);if(i>=0&&i<dialog.choices.length){dialog.select=i;advance();return}}advance();return}
+ if(mode==='battle'){if(x>24&&x<579&&y>391&&y<537){let col=Math.floor((x-39)/267),row=Math.floor((y-395)/46),index=col*3+row;if(index>=0&&index<battle.actions.length){battle.sel=index;battleConfirm()}}return}
+ if(mode==='world'&&x<SX&&y<512){let tx=Math.floor(x/T),ty=Math.floor(y/T);let dx=tx-s.x,dy=ty-s.y;if(Math.abs(dx)+Math.abs(dy)<=2){s.dir=Math.abs(dx)>Math.abs(dy)?dx>0?'right':'left':dy>0?'down':'up';if(Math.abs(dx)+Math.abs(dy)===1)interact();else if(Math.abs(dx)+Math.abs(dy)===2)move(s.dir)}}}
+canvas.addEventListener('pointerdown',handleStageTap);
+for(let el of document.querySelectorAll('[data-dir]')){let dir=el.dataset.dir;let interval=null;const stop=e=>{if(interval){clearInterval(interval);interval=null}release(dir);if(e?.pointerId!=null){try{el.releasePointerCapture(e.pointerId)}catch(_){}}};el.addEventListener('pointerdown',e=>{e.preventDefault();try{el.setPointerCapture(e.pointerId)}catch(_){}press(dir);interval=setInterval(()=>{move(dir)},160)});for(let ev of ['pointerup','pointercancel','lostpointercapture'])el.addEventListener(ev,stop)}
+$('aButton').addEventListener('click',()=>{if(mode==='ending'){mode='title';$('titleOverlay').hidden=false}else advance()});
+$('bButton').addEventListener('click',()=>{if(mode==='world')journal=!journal;else if(journal)journal=false;else if(mode==='dialog')advance();else if(mode==='battle')battle.sel=(battle.sel+1)%battle.actions.length});
+$('journalButton').addEventListener('click',()=>{if(mode==='world')journal=!journal;else if(journal)journal=false;else notify('Journal available while exploring.')});
+$('saveButton').addEventListener('click',()=>{if(!s){notify('Begin your adventure first.');return}save();notify('Game saved on this device.')});
+$('soundButton').addEventListener('click',()=>{if(!soundtrack){if(!setupAudio())return;soundtrack=true}else soundtrack=false;updateAudio()});
+$('newButton').addEventListener('click',beginNew);$('continueButton').addEventListener('click',continueGame);
+$('continueButton').disabled=!load();
+// Transparent testing hook, disabled outside local explicit opt-in query string.
+if(new URLSearchParams(location.search).has('selftest'))window.__heartlineTest={get:()=>({mode,s,dialog,battle,journal}),move,advance,beginNew,beginBattle,triggerBoss,finish,save,transition,inspect};
+requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>
